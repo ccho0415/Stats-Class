@@ -1,0 +1,128 @@
+---
+title: "STAT GR 4206/5206 Homework_2"
+author: "Christine Chong cc4190"
+date: "May 31, 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Part 1 : Loading and Cleaning the Data in R
+
+  i. Load the data into a dataframe called housing.
+  
+```{r}
+housing <- read.csv("NYChousing.csv", header=TRUE, sep = ",")
+```
+    
+  ii. How many rows and columns does the dataframe have?
+  
+```{r}
+nrow(housing)
+ncol(housing)
+```
+
+  iii. Run this command, and explain. in words, what this does :
+  
+```{r}
+apply(is.na(housing),2,sum)
+```
+  
+  Is.na is a function that returns true if there is missing data. So is.na(housing) and is asking the program to look for missing values in the housing dataframe. The apply function here is asking the program, for each column, to run the is.na(housing) and add up all the missing values it finds. 
+  
+  iv. Remove the rows of the dataset for which the variable Value is NA.
+  
+```{r}
+newHousing <- housing[!(is.na(housing$Value) == TRUE),]
+newHousing
+```
+  
+  v. How many rows did you remove with the previous call? Does this agree with your result from (iii)?
+  
+```{r}
+removed <- nrow(housing) - nrow(newHousing)
+removed
+```
+ 
+  52 rows were removed with the previous call. This does agree with the results from iii.
+ 
+  vi. Create a new variable in the dataset called logValue that is equal to the logarithm of the property's Value. What are the minimum, median, mean, and maximum values of logValue?
+  
+```{r}
+logValue <- log(newHousing$Value)
+minLogValue <- min(logValue)
+medLogValue <- median(logValue)
+meanLogValue <- mean(logValue)
+maxLogValue <- max(logValue)
+minLogValue
+medLogValue
+meanLogValue
+maxLogValue
+```
+
+  vii. Create a new variable in the dataset called logUnits that is equal to the logarithm of the number of units in the property. The number of units in each piece of property is stored in the variable UnitCount.
+  
+```{r}
+logUnits <- log(newHousing$UnitCount)
+```
+ 
+  viii. Finally create a new variable in the dataset called after1950 which equals TRUE if the property was built in or after 1950 and FALSE otherwise. You'll want to use the YearBuilt variable here. This can be done in a single line of code.
+  
+```{r}
+housing$after1950 <- ifelse(housing$YearBuilt >= 1950, TRUE, FALSE)
+
+```
+
+##Part 2: EDA
+  i.Plot property logValue against property logUnits. Name the x and y labels of the
+plot appropriately. logValue should be on the y-axis.
+```{r}
+plot(logUnits, logValue, xlab = "logUnits", 
+     ylab = "logValue")
+```
+  ii. Make the same plot as above, but now include the argument col = factor(housing$after1950).
+Describe this plot and the covariation between the two variables. What does the coloring
+in the plot tell us?
+```{r}
+plot(logUnits, logValue, xlab = "logUnits", 
+     ylab = "logValue",
+     col = factor(housing$after1950))
+legend("bottomright", legend = levels(factor(housing$after1950)), fill
+= unique(factor(housing$after1950)))
+```
+  The coloring on the plots tell us that the houses represented by black circles were built before 1950 and the houses represented by red circles were built after 1950.
+
+  iii. The cor() function calculates the correlation coefficient between two variables. What
+is the correlation between property logValue and property logUnits in (i) the whole
+data, (ii) just Manhattan (iii) just Brooklyn (iv) for properties built after 1950 (v) for
+properties built before 1950?
+  For the whole data
+```{r}
+cor(logUnits, logValue)
+manHousing <- newHousing[newHousing$Borough == "Manhattan", ]
+brookHousing <- newHousing[newHousing$Borough == "Brooklyn", ]
+logManUnits <- log(manHousing$UnitCount)
+logManValue <- log(manHousing$Value)
+logBrookUnits <- log(brookHousing$UnitCount)
+logBrookValue <- log(brookHousing$Value)
+```
+  iv. Make two plots showing property logValue against property logUnits for Manhattan
+and Brooklyn. (If you can fit the information into one plot, clearly distinguishing the
+two boroughs, that's OK too.)
+  v.  Consider the following block of code. Give a single line of R code which gives the same
+final answer as the block of code. There are a few ways to do this.
+manhat.props <- c()
+for (props in 1:nrow(housing)) {
+if (housing$Borough[props] == "Manhattan") {
+manhat.props <- c(manhat.props, props)
+}
+}
+med.value <- c()
+for (props in manhat.props) {
+med.value <- c(med.value, housing$Value[props])
+}
+med.value <- median(med.value, na.rm = TRUE)
+  vi. Make side-by-side box plots comparing property logValue across the five boroughs.
+  vii. For five boroughs, what are the median property values? (Use Value here, not logValue.)
