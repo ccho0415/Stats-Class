@@ -2,7 +2,9 @@
 title: "Lab 3"
 author: "Christine Chong cc4190"
 date: "June 1, 2017"
-output: pdf_document
+output: 
+  pdf_document: 
+    latex_engine: lualatex
 ---
 
 ```{r, echo = FALSE}
@@ -42,7 +44,6 @@ Strategy:  we'll re-sample **(price, carat)** pairs in order to provide an estim
 1) How many rows are in the **diamonds** dataset?  Call this value **n**.
 
 ```{r}
-# You'll want to type your response to question B(1) here.  Your response should look like:
 n <- nrow(diamonds)
 n
 ```
@@ -81,7 +82,6 @@ Hint: (b) You'll probably want to use the **coefficients()** function.
 4) Repeat the above call for each re-sampled dataset produced from the **resampled_values** matrix.  We'll store the new coefficient estimates in a matrix **resampled_ests** with **B** rows and **2** columns.  Again you'll want to write a loop, this time that iterates over the rows of **resampled_values**.  (Note that if you are very clever this could be done using **apply()**.)  Make sure to print **head(resample_ests)** at the end.
 
 ```{r}
-# You'll want to type your response to question B(4) here.  Your response should look like:
 # Extra Credit if you can use an apply statement
 resampled_ests <- matrix(NA, nrow = B, ncol = 2)
 names(resampled_ests) <- c("Intercept_Est", "Slope_Est")
@@ -101,19 +101,20 @@ Make a vector **diff_estimates** that holds the differences between the original
 
 ```{r}
 # You'll want to type your response to question B(5) here.  Your response should look like:
-# diff_estimates <-
+diff_estimates <- resample1_ests[2] - coef(lm0)[2]
+diff_estimates
 ```
 
 6) Plot a histogram of the bootstrap estimates of $\hat{\beta}_1$ (they're in the `Slope_Est' column).  Label the x-axis appropriately.
 
 ```{r}
-# You'll want to type your response to question B(6) here.
+ hist(resampled_ests)
 ```
 
 7) Calculate the standard deviation of the bootstrap estimates.
 
 ```{r}
-# You'll want to type your response to question B(7) here.
+sd(resampled_ests)
 ```
 
 # [Optional] Part (C): Bootstrap Confidence Intervals
