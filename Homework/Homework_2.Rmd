@@ -99,14 +99,44 @@ is the correlation between property logValue and property logUnits in (i) the wh
 data, (ii) just Manhattan (iii) just Brooklyn (iv) for properties built after 1950 (v) for
 properties built before 1950?
   For the whole data
+  
 ```{r}
 cor(logUnits, logValue)
+```
+  For Manhattan
+  
+```{r}
 manHousing <- newHousing[newHousing$Borough == "Manhattan", ]
-brookHousing <- newHousing[newHousing$Borough == "Brooklyn", ]
 logManUnits <- log(manHousing$UnitCount)
 logManValue <- log(manHousing$Value)
+cor(logManUnits, logManValue)
+
+```
+  For Brooklyn
+  
+```{r}
+brookHousing <- newHousing[newHousing$Borough == "Brooklyn", ]
 logBrookUnits <- log(brookHousing$UnitCount)
 logBrookValue <- log(brookHousing$Value)
+cor(logBrookUnits, logBrookValue)
+```
+  Properties before 1950
+  
+```{r}
+before1950Housing <- newHousing[newHousing$YearBuilt < 1950, ]
+logBefore1950Units <- log(before1950Housing$UnitCount)
+logBefore1950Value <- log(before1950Housing$Value)
+cor(logBefore1950Units, logBefore1950Value)
+```
+
+
+  Properties after 1950
+  
+```{r}
+after1950Housing <- newHousing[newHousing$YearBuilt >= 1950, ]
+logAfter1950Units <- log(after1950Housing$UnitCount)
+logAfter1950Value <- log(after1950Housing$Value)
+cor(logAfter1950Units, logAfter1950Value)
 ```
   iv. Make two plots showing property logValue against property logUnits for Manhattan
 and Brooklyn. (If you can fit the information into one plot, clearly distinguishing the
