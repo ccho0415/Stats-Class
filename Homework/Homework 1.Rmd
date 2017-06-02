@@ -2,7 +2,9 @@
 title: "STAT GR 4206/5206 Homework 1"
 author: "Christine Chong cc4190"
 date: "May 23, 2017"
-output: pdf_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
