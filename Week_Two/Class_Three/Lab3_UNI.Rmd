@@ -88,7 +88,7 @@ names(resampled_ests) <- c("Intercept_Est", "Slope_Est")
 for (b in 1:B) {
   resampled_rows <- resampled_values[b,]
   resampled_data <- diamonds[resampled_rows, ]
-  resampled_ests <- coef(lm(price~carat, data = resampled_data))
+  resampled_ests[b, ] <- coef(lm(price~carat, data = resampled_data))
 }
 head(resampled_ests)
 ```
@@ -101,14 +101,14 @@ Make a vector **diff_estimates** that holds the differences between the original
 
 ```{r}
 # You'll want to type your response to question B(5) here.  Your response should look like:
-diff_estimates <- resample1_ests[2] - coef(lm0)[2]
+diff_estimates <- mean(resample1_ests[2]) - coef(lm0)[2] 
 diff_estimates
 ```
 
 6) Plot a histogram of the bootstrap estimates of $\hat{\beta}_1$ (they're in the `Slope_Est' column).  Label the x-axis appropriately.
 
 ```{r}
- hist(resampled_ests)
+ hist(resampled_ests[, 2])
 ```
 
 7) Calculate the standard deviation of the bootstrap estimates.
