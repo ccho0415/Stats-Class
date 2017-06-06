@@ -1,0 +1,300 @@
+
+\documentclass[12pt, leqno]{article}
+
+%%% PACKAGES
+\usepackage{listings}
+\lstset{
+    language=R,
+}
+
+\usepackage{tikz,xcolor,soul}
+\usepackage{media9}
+\usetikzlibrary{arrows,shapes,backgrounds,fit}
+
+\usepackage{booktabs} 
+\usepackage{array} 
+\usepackage{paralist} 
+\usepackage{verbatim} 
+\usepackage{subfig} 
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{rotating}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage[parfill]{parskip}
+\usepackage{lscape}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+%\usepackage{showkeys}%this show all labels of equations, graphics and tables
+
+\newtheorem{thm}{Theorem}
+\newcommand{\e}{\epsilon} 
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\bcr}{\begin{center}}
+\newcommand{\ecr}{\end{center}}
+\newcommand{\ben}{\begin{eqnarray*}}
+\newcommand{\een}{\end{eqnarray*}}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mbf}{\mathbf}
+\newcommand{\tmb}[1]{\tilde{\mathbf{#1}}}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+\newcommand{\expec}{\mathbb{E}}
+
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} 
+\pagestyle{fancy} 
+\renewcommand{\headrulewidth}{0pt} 
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} 
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape}
+\renewcommand{\baselinestretch}{1.1}
+%\usepackage{showkeys}
+%\usepackage{kokoszka}
+%\usepackage{graphicx}
+%\usepackage{oxford3}
+
+\usepackage[utf8]{inputenc} 
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} 
+\geometry{a4paper} 
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+%%% END Article customizations
+
+%%% Create New Commands
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape}
+\renewcommand{\baselinestretch}{1.1}
+
+\newcommand{\isd}{\stackrel{d}{=}}
+\newcommand\bzero{\mbox{\boldmath${0}$}}
+\newcommand\bbe{\mbox{\boldmath${ \beta}$}}
+\newcommand\bdg{\mbox{\boldmath${\dg}$}}
+\newcommand\beg{\mbox{\boldmath${\eg}$}}
+\newcommand\bfeta{\mbox{\boldmath${\eta}$}}
+\newcommand\bga{\mbox{\boldmath${\gamma}$}}
+\newcommand\bGa{\mbox{\boldmath${\Gamma}$}}
+\newcommand\bGg{\mbox{\boldmath${\Gg}$}}
+\newcommand\bpsi{\mbox{\boldmath${\psi}$}}
+\newcommand\bDg{\mbox{\boldmath${\Delta}$}}
+\newcommand\bDel{\mbox{\boldmath${\Delta}$}}
+\newcommand\bLa{{\bf \Lambda}}
+\newcommand\bPhi{{\bf \Phi}}
+\newcommand\bPsi{{\bf \Psi}}
+\newcommand\bzg{{\bf \zg}}
+\newcommand\bSig{\mbox{\boldmath${\Sigma}$}}
+
+
+\newcommand\hbDg{\hat{\mbox{\boldmath${\Delta}$}}}
+\newcommand\hbeg{\hat{\mbox{\boldmath${\eg}$}}}
+\newcommand\hbeta{\hat{\mbox{\boldmath${\eta}$}}}
+\newcommand\hbga{\hat{\mbox{\boldmath${\gamma}$}}}
+\newcommand\hbGa{\hat{\mbox{\boldmath${\Gamma}$}}}
+
+\newcommand\bA{{\bf A}}
+\newcommand\ba{{\bf a}}
+\newcommand\bB{{\bf B}}
+\newcommand\bb{{\bf b}}
+\newcommand\bC{{\bf C}}
+\newcommand\bc{{\bf c}}
+\newcommand\bF{{\bf F}}
+\newcommand\bG{{\bf G}}
+\newcommand\bH{{\bf H}}
+\newcommand\bI{{\bf I}}
+\newcommand\bJ{{\bf J}}
+\newcommand\bK{{\bf K}}
+\newcommand\bM{{\bf M}}
+\newcommand\bm{{\bf m}}
+\newcommand\bP{{\bf P}}
+\newcommand\bQ{{\bf Q}}
+\newcommand\bR{{\bf R}}
+\newcommand\bS{{\bf S}}
+\newcommand\bT{{\bf T}}
+\newcommand\bt{{\bf t}}
+\newcommand\bU{{\bf U}}
+\newcommand\bu{{\bf u}}
+\newcommand\bV{{\bf V}}
+\newcommand\bv{{\bf v}}
+\newcommand\bW{{\bf W}}
+\newcommand\bX{{\bf X}}
+\newcommand\bx{{\bf x}}
+\newcommand\bY{{\bf Y}}
+\newcommand\by{{\bf y}}
+\newcommand\bZ{{\bf Z}}
+
+
+\newcommand\cD{{\mathcal D}}
+\newcommand\cF{{\mathcal F}}
+\newcommand\cH{{\mathcal H}}
+\newcommand\cL{{\mathcal L}}
+\newcommand\cO{{\mathcal O}}
+\newcommand\cR{{\mathcal R}}
+\newcommand\cS{{\mathcal S}}
+\newcommand\cT{{\mathcal T}}
+
+\newcommand\ap{{a^\prime}}
+\newcommand\bp{{b^\prime}}
+\newcommand\jp{j^\prime}
+\newcommand\kp{{k^\prime}}
+\newcommand\ellp{{\ell^\prime}}
+\newcommand\np{n^\prime}
+\newcommand\egp{\eg^{\prime}}
+\newcommand\begp{\mbox{\boldmath${\eg}^{\prime}$}}
+
+\newcommand\bMat{\begin{bmatrix}}
+\newcommand\eMat{\end{bmatrix}}
+
+
+\newtheorem{Assume}{A}
+\newtheorem{List}{Note}
+
+
+%%% The "real" document content comes below...
+
+\title{Brief Article}
+\author{The Author}
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+
+\setlength{\oddsidemargin}{0mm}
+\setlength{\evensidemargin}{0mm}
+\setlength{\topmargin}{-15mm}
+\setlength{\textwidth}{164mm}
+\setlength{\textheight}{215mm}
+
+\begin{document}
+\begin{center}
+{\large {\bf Midterm GR5206 October 21, 2016}}
+\end{center}
+
+\vspace{5 cm}
+
+This is the computer portion of the midterm. When you are done, you should turn in a knitted .html file along with the raw .Rmd file on the Canvas page.  Your files should be saved as ``Midterm\_UNI" (Midterm underscore UNI) where `UNI' is replaced with your UNI.  The head of your .Rmd file should look like the following:
+\begin{verbatim}
+---
+title: "Midterm Section 00#"
+author: "Name (UNI)"
+date: "October 21, 2016"
+output: html_document
+---
+\end{verbatim} 
+where `00\#' is replaced with your section number and `Name (UNI)' is replaced with your name and UNI.  Please clearly label the questions in your responses.  The code for the responses should each be contained in separate code chunks.  \textbf{Note that having the correct heading in your file and saving your file with the correct name will be worth 2 points in your final midterm grade.}
+
+
+\vspace{1 cm}
+
+This part of the exam is open notes, so feel free to use any resource form the class: labs, homeworks, notes, etc.  \textbf{However, you may not communicate with your peers during this portion of the exam.  If we see you on your email or messenger you will automatically receive a 0 for this part of the exam.}
+
+
+\newpage
+
+
+{\large\textbf{Question 1: Character Data}}
+
+\vspace{1.5 cm}
+
+The file \texttt{rich.html} on the Canvas page is a listing of the 100 richest people in America, according to Forbes magazine (from 2013), which I scraped from \texttt{Forbes.com}. We will use the file to practice working with character data.  The file \texttt{rich\_dataframe.txt} is formatted version of the data in the \texttt{.html} file.  
+
+\vspace{1.5 cm}
+
+(a) Please load \texttt{rich.html} onto your computer using \texttt{readLines()} and save it as \texttt{rich}.  Load \texttt{rich\_dataframe.txt} using the appropriate command so that it's a data frame in \texttt{R} and save it as \texttt{rich\_df}.
+
+\vspace{1.5 cm}
+
+(b)  Your task is to extract the net worths of people listed in \texttt{rich}.  The lines that contain the net worths look like the following:
+\begin{verbatim}
+"\t\t<td class=\"worth\">$##,# B</td>"
+\end{verbatim}  
+except with the `\#' values are replaced by digits.  For example, the first two lines which hold Bill Gates' and Warren Buffet's net worth are
+\begin{verbatim}
+"\t\t<td class=\"worth\">$72 B</td>"
+"\t\t<td class=\"worth\">$58,5 B</td>"
+\end{verbatim}
+
+\vspace{.5 cm}
+
+You can find the location of these lines by running the following command:
+\begin{verbatim}
+worth_lines <- grep("td class=\"worth\"", rich)
+\end{verbatim}
+To convince yourself, make sure the length of the above output is indeed 100.  
+
+\vspace{.5 cm}
+Your first step is to create a vector called \texttt{networths} that holds the values of net worths recorded in \texttt{rich}, in the same format.  The first two values of your vector should be ``\$72 B" and ``\$58,5 B" and it should be of length 100.  At the end, run the following command \texttt{networths[1:5]}.
+
+\vspace{1.5 cm}
+
+(c)  The Forbes website writes net worths in the form ``\$75,5 B" to mean $75,500,000,000$ dollars or 75.5 billion dollars. 
+
+\vspace{.5 cm}
+
+Write code to convert from the Forbes format in your \texttt{networths} vector to numbers (in billions), and run it to create a numeric vector of net worths, called \texttt{networths2}.  (If you are unable to create a \texttt{networths} vector in part (b), use the column \texttt{rich\_df\$Networths} as your starting point.)  The first two values of your vector should be the numbers 72 and 58.5 and the vector should be of length 100.  At the end, run the following commands \texttt{networths2[1:5]} and \texttt{identical(networths2, rich\_df\$Worth)}.
+
+\vspace{1.5 cm}
+
+(d)  Add the vector you created in (c) as a column to the data frame \texttt{rich\_df}.  Call the new column \texttt{MyWorth} and run the command
+\begin{verbatim}
+head(rich_df)
+\end{verbatim}
+If you couldn't complete part (c), add a column \texttt{MyWorth} to the data frame \texttt{rich\_df} and fill the column with NA values.
+
+\newpage
+
+\textbf{Question 2: Plotting and KNN Classification}
+
+This question uses the data frame \texttt{rich\_df} you imported in the previous question.
+
+\vspace{1.5 cm}
+
+(a)  In either base \texttt{R} graphics or \texttt{ggplot2} create a scatterplot with
+\begin{itemize}
+\item \texttt{Age} on the x-axis and \texttt{Worth} on the y-axis.
+\item points colored according to whether or not the billionaire's industry is technology (this information is in the \texttt{Technology} variable).
+\item the x-axis labeled `\texttt{Age}' and the y-axis labeled `\texttt{Net Worth}'.
+\item the title `labeled `\texttt{Billionaire Net Worth vs Age}'.
+\item a legend describing the coloring of the points.
+\end{itemize}
+
+\vspace{1.5 cm}
+
+(b) \texttt{rich\_df} holds data from 2013 and so isn't the most up-to-date.  Let's imagine a new billionaire has come on the scene and we know that she is 55 years old and worth 30 billion.  Let's add a new point to the graph that represents her.  So your tasks are the following:
+\begin{itemize}
+\item add a new point to the graph that's colored purple at location (55, 30).
+\item \emph{clearly} label the new point `\texttt{New Money}'.
+\end{itemize}
+
+\vspace{1.5 cm}
+
+(c)  Let's also imagine that we don't know whether the new millionaire's industry is technology or not and we'd like to make a prediction using a KNN Classification scheme.  Suppose that the Euclidean distances between the new point and the points in the \texttt{rich\_df} dataset are stored in a vector called \texttt{dists} (meaning the first value in \texttt{dists} in the distance between the new point and Bill Gates' point, the second value in \texttt{dists} in the distance between the new point and Warren Buffet's point, and so on).
+
+\vspace{1.5 cm}
+
+Now suppose we have the following information:
+\begin{verbatim}
+> head(order(dists), 10)
+ [1] 12  6  8  7 22 21 23 13 14 25
+> tail(order(dists), 10)
+ [1] 46 98 60  2 37  1 29 71 68 50
+\end{verbatim}
+
+Using the above information, what would be the predicted classification if we were using a KNN classifier with $K=7$.  You don't need to write code that outputs the answer, but you should need a line or two of code to give you enough information to find the answer. 
+
+\end{document}
