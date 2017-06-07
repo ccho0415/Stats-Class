@@ -339,5 +339,96 @@ if(condition){
   mfrow - Plot figures in an array
   col - Color
 
+##Fifth Slides##
+
+#Guassian Random Variables
+  n <- 100
+  vec <- rnorm(n, mean = mu)
+  head(vec)
+[1] -0.6264538 0.1836433 -0.8356286 1.5952808 0.3295078
+[6] -0.8204684
+  mean(vec)
+     0.1088874
+  B <- 1000
+  estimates <- vector(length = B)
+  for (b in 1:B) {
+    new_sample <- sample(vec, size = n, replace = TRUE)
+    estimates[b] <- mean(new_sample)
+  }
+  head(estimates)
+[1] 0.12250487 0.10894538 0.21117547 0.05405239 0.16694190
+[6] 0.13804749
+  var(estimates)
+    0.007380355
+
+##Sixth Slides##
+
+#Print
+print() -> keeps whole string
+cat() -> strips off " "
+  x <- 6
+  y <- 7
+  cat("I have", x, "cats and", y, "hedgehogs as pets.")
+    I have 6 cats and 7 hedgehogs as pets.
+#Sub String
+substr(string, start =, stop =)
+
+  phrase <- "Christmas Bonus"
+  substr(phrase, start = 8, stop = 12)
+    "as Bo"
+  substr(phrase, start = 13, stop = 13) <- "g"
+    "Christmas Bogus"
+#String Split
+strsplit(string, split=)
+  todo <- "Lecture, Lab, Homework"
+  strsplit(todo, split = ",") -> turns the input into a list
+   [[1]]
+   [1] "Lecture" " Lab" " Homework"
+  strsplit(c(todo, "Midterm, Final"), split = ",")
+   [[1]]
+   [1] "Lecture" " Lab" " Homework"
+   [[2]]
+   [1] "Midterm" " Final"
+#Paste
+paste() -> combines strings into 1 long string
+  paste("cat", "squirrel", "hedgehog")
+    "cat squirrel hedgehog"
+#Grep
+grep(patten,x)->searches for a specified substring given by a pattern in a vector x of strings
+  grep("students", HC)
+    6 15 23 30
+  HC[grep("students", HC)]
+[1] "Graduate students are expected to exhibit the high level of personal and academic integrity"
+[2] "In practical terms, students must not cheat on examinations, and deliberate plagiarism is of"
+[3] "Graduate students are responsible for proper citation and paraphrasing, and must also take"
+[4] "All incoming doctoral and master's students in the Arts
+
+. regexpr() returns the location of the first match with attributes like
+the length of the match.
+. gregexpr() works similarly to regexpr(), but returns all matching
+locations. 'g' for global.
+. regmatches() takes strings and the output of regexpr() or
+gregexpr() and returns the actual matching strings.
+
+#Regular Expressions
+1. Indicate sets of characters with brackets [].
+. "[a-z]" matches any lower case letters.
+. "[:punct:]" matches all punctuation marks.
+2. The caret ^ negates a character range when in the leading position.
+. "[^aeiou]" matches any characters except lower-case vowels.
+3. The period . stands for any character and doesn't need brackets.
+. "c..s" matches "cats", "class", "c88s", "c s", etc
+
+Quantifier Description (Match if the expression is ...)
+    +       Repeated one or more times.
+    *       Repeated zero or more times.
+    ?       Repeated zero or one times.
+   {n}      Repeated exactly n times.
+  {n, }     Repeated n or more times.
+  {n, m}    Repeated between n and m times.
   
+  "M[rs][rs]?\.?" matches "Mr", "Ms", "Mrs", "Mr.", "Ms.", "Mrs.".
+  
+$ -> a pattern only matches at end of a line
+^ -> a pattern that only matches at the beginning of a line
 

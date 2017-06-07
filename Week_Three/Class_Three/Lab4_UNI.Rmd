@@ -1,7 +1,7 @@
 ---
 title: "Lab 4"  
-author: "Enter Your Name and UNI Here"
-date: "April 5th, 2017"
+author: "Christine Chong cc4190"
+date: "June 7th 2017"
 output: pdf_document
 ---
 
@@ -18,16 +18,54 @@ where $\log(x)$ is the natural logarithm of $x$.  We seek to estimate the value 
 # Tasks
 
 1) Using **R**, define the function $$f(x)=\frac{-\log(x)}{1+x}, \ \ x>0.$$ Test the points $f(0)$ and $f(2)$.  
+```{r}
+convex_func <- function(x) {
+  if(x>0){
+    top <- (log(x)*-1)
+    bottom <- 1+x
+    total <- top/bottom
+    return(total)    
+  }else{
+    return (FALSE)
+  }
 
+}
+convex_func(0)
+convex_func(2)
+```
 2) Plot the function $f(x)$ over the interval $(0,6]$. 
-
+```{r}
+allx <- c(1,2,3,4,5,6)
+ally <- c(convex_func(1),convex_func(2),convex_func(3),convex_func(4),convex_func(5),convex_func(6))
+plot(allx,ally)
+```
 3)  By inspection, were do you think global minimum is located at?  
-
+  f(4)
+  
 4) Define a **R** function which computes the difference quotient of $f(x)$, i.e., for $h>0$, 
 $$\frac{f(x+h)-f(x)}{h}.$$ This function should have two inputs; $h$ and $x$.  Name the difference quotient function **diff.quot**.  Note that for small $h$,  this function is the approximate derivative of $f(x)$.    
-
+```{r}
+diff.quot <- function(x, h){
+  if(x>0 && h>0){
+    topx<- (log(x)*-1)
+    bottomx <- 1+x
+    totalx <- topx/bottomx
+    toph <- (log(h)*-1)
+    bottomh <-1+h
+    totalh <- toph/bottomh
+    topall <- (topx+toph) - topx
+    totalall <- topall/h
+    return(totalall)
+  }else{
+    return(FALSE)
+  }  
+}
+```
 5) Plot both the difference quotient function **diff.quot** and $f(x)$ over the interval $(0,6]$.  Fix $h=.0001$ to construct this plot.  Comment on any interesting features.
-
+```{r}
+diff.quot.y <- c(diff.quot(1,.0001),diff.quot(2,.0001),diff.quot(3,.0001),diff.quot(4,.0001), diff.quot(5,.0001), diff.quot(6,.0001))
+plot(allx,diff.quot.y)
+```
 6) Write a **R** function named **basic.grad.descent** that runs the basic gradient descent algorithm on the function $f(x)$.
 The function should have inputs:   
 \begin{enumerate}
