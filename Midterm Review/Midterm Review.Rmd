@@ -1,0 +1,343 @@
+---
+title: "Midterm Review"
+author: "Christine Chong"
+date: "June 6, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+##First Slides##
+
+#Concatenate
+c(value1, value2, value3)
+#Repeat
+rep(val, num)
+#Sequence of Integers
+A:B
+#Random Variables from Normal Distribution
+rnorm(n= #, mean = #, sd = #)
+#Plot a Histogram
+hist(vector)
+
+#Vector
+x <- c()
+str(vec)
+**Subsetting**
+  y<-(c(27, -34, 19, 7, 61))
+    y[c(1,4)]
+      27 7
+    y[c(1,4)] <- 0
+    y
+      0 -34 19 0 61
+    y[-c(1,4)]
+      -34 19 61
+**Vector Functions**
+#Length
+length(x)
+#Sum
+sum(x)
+#Mean
+mean(x)
+#Quantiles
+quantiles(x)
+#Maximum
+max(x)
+#Minimum
+min(x)
+#Standard Deviation
+sd(x)
+#Variance
+var(x)
+#Summary
+summary(x)      
+**Element Wise Operations**
+  v<- c(1,3,5)
+  v+4
+    5 7 9
+
+#Matrix
+matrix(values, nrow, ncol)
+matrixName[row, col]
+rbind(value1, value2, value3)
+cbind(value1, value2, value3)
+colnames(matrixName) <- c(Name1, Name2)
+rownames(matrixName) <- c(Name1, Name2)
+**Subsetting**
+z
+        First Second Third
+[1,]    1     4       7
+[2,]    2     5       8
+[3,]    3     6       9
+
+  z[2:3, "Third"]
+    8 9
+  c(z[,-(2:3)], "abc")
+    "1" "2" "3" "abc"
+  rbind(z[1,], 1:3)
+      First Second Third
+[1,]  1     4      7
+[2,]  1     2      3
+**Matrix Functions**
+#Multiplication
+A %*% B
+#Dimension
+dim(A)
+#Transpose
+t(A)
+#Diagonal Matrix
+diag(x)
+#Return x in b=Ax
+solve(A,b)
+#Inverse of A
+solve(A)
+#Combine matrices horizantally
+cbind(A,B)
+#Combine matrices vertically
+rbind(A,B)
+
+#Line of Best Fit
+
+#System of Linear Equations
+  A<- matrix(c(3,1,1,-2,1/2,1,1,-12,1), nrow = 3)
+  b <- c(-1,2,3)
+  solve(A,b)
+    1 2 0
+  x <- c(1, 2, 0)
+  A %*%x
+    [,1]
+[1,]  -1
+[2,]   2
+[3,]   3
+
+#Eigenvalue
+  A<- matrix(c(1,-2,-2,4), nrow=2, byrow=TRUE)
+  identity <-diag(2)
+  det(A -5*identity)
+    0
+
+#Filtering
+  c(0,1,4) < 3
+    TRUE TRUE FALSE
+  which(c(0,1,4) < 3)
+    1 2
+  which(c(TRUE, TRUE, FALSE))
+    1 2
+    
+  w <- c(-3, 20, 9, 2)
+  w[w>3]
+    20 9
+  w > 3
+    FALSE TRUE TRUE FALSE
+  w[c(FALSE, TRUE, TRUE, FALSE)]
+    20, 9
+  w[w*w >=3 & w*w <= 10]
+    -3 2
+    
+  w <- c(-1, 20, 9, 2)
+  v <- c(0, 17, 10, 1)
+  w[w>v]
+    20, 2
+  w>v
+    FALSE TRUE FALSE TRUE
+  w[c(FALSE, TRUE, FALSE, TRUE)]
+    20 2
+  
+  M <- matrix(c(rep(4,5), 5:8), ncol=3, nrow=3)
+M
+      [,1][,2][,3]
+[1,]     4   4   6
+[2,]     4   4   7
+[3,]     4   5   8
+  M > 5
+       [,1] [,2]  [,3]
+[1,]  FALSE FALSE TRUE
+[2,]  FALSE FALSE TRUE
+[3,]  FALSE FALSE TRUE
+  M[,3]< 8
+    TRUE TRUE FALSE
+  M[M[,3] <8,]
+      [,1][,2][,3]
+[1,]     4   4   6
+[2,]     4   4   7
+  M[M>5] <- 0
+      [,1][,2][,3]
+[1,]     4   4   0
+[2,]     4   4   0
+[3,]     4   5   0
+z
+      First Second Third
+[1,]      1      1     9
+[2,]      2      0    16
+[3,]      3      1    25
+  z[z[,"Second"],]
+      First Second Third
+[1,]      1      1     9
+[2,]      1      1     9  
+  z[, 1]!=1
+    FALSE TRUE TRUE
+  z[(z[,1] !=1) ,3]
+    16 25
+#List
+list(name1 = object1, name2 = object2, ...)
+lst$c
+lst[[i]]
+lst[["c"]]
+body_fat <- list(variable_data = data,
+                 summary_x = sum_x, summary_y = sum_y,
+                 LOBF_est = est_vals)
+  body_fat[[1]]
+         x    y
+[1,] 49.30 1894
+[2,] 59.30 2050
+[3,] 68.30 2353
+[4,] 48.10 1838
+[5,] 57.61 1948
+[6,] 78.10 2528
+[7,] 76.10 2568
+  body_fat$LOBF_est
+    25.01184 607.65386
+  body_fat[["summary_x"]]
+    Min. 1st Qu. Median Mean  3rd Qu. Max.
+    48.10 53.46  59.30  62.40 72.20   78.10
+
+##Second Slides##
+
+#Factor
+factor(data)
+#Structure
+str(object)
+#Split
+split(vector, factor)
+  ages<- c(20,30, 40, 35, 35, 35, 35)
+  sex <- c("M", "M", "F", "M","F","F","F")
+  split(ages, list(group, sex))
+    $Control.F
+      40
+    $Treatment.F
+      35 35 35
+    $Control.M
+      20 30
+    $Treatment.M
+      35
+#Table
+table(object)
+  table(group)
+group
+  Control Treatment
+        3         4
+  new_table <- table(sex, group)
+group Control Treatment
+sex                  
+F           1         3
+M           2         1
+  new_table[,"Control"]
+    F M
+    1 2
+  round(new_table/length(group),3)
+group
+sex Control Treatment
+F     0.143     0.429
+M     0.286     0.143
+#Dataframe
+data.frame()
+#Read Data
+read.table("filename", header=TRUE, as.is=TRUE)
+#Scan
+scan()
+#For Loop
+for(i in x){
+  Loop Body
+}
+#While Loop
+while(condition){
+  Loop Body
+}
+#If Else Statements
+if(condition){
+  Body 1
+}else{
+  Body 2
+}
+#Adding Two Vectors
+  u<- c(1,2,3)
+  v<- c(10, -20, 30)
+  c<- u+v
+  c
+    11 -18  33
+#IfElse
+  ifelse(condition, if True, if False)
+#Apply
+  apply(data, 1 or 2, function)
+    mat<-matrix(1:12, ncol=6)
+    mat
+    [,1] [,2] [,3] [,4] [,5] [,6]
+[1,]   1    3    5    7    9   11
+[2,]   2    4    6    8   10   12
+    apply(mat, 2, sum)
+      3 7 11 15 19 23
+  lapply -> returns list
+  sapply -> returns vector
+  tapply(vector, factor, function) -> split vector into groups according to levels
+  
+##Third Slides##
+
+#Parameter Estimation
+   Grocery <- read.table("Kutner_6_9.txt", header=T)
+   head(Grocery)
+     Y      X1   X2 X3
+1 4264 305.657 7.17  0
+2 4496 328.476 6.20  0
+3 4317 317.164 4.61  0
+4 4292 366.745 7.02  0
+5 4945 265.518 8.61  1
+6 4325 301.995 6.88  0   
+  X <- cbind(rep(1,52), Grocery$X1, Grocery$X2, Grocery$X3)
+  beta_hat <- solve((t(X) %*% X)) %*% t(X) %*% Grocery$Y
+  round(t(beta_hat), 2
+        [,1] [,2]   [,3]   [,4]
+[1,] 4149.89 0.79 -13.17 623.55
+  **Estimated Model**
+    Y^ = 4149.89 + 0.79X1 ??? 13.17X2 + 623.56X3
+    Labor.Hours = 4149 \ .89 + 0.79 × Cases.Shipped
+??? 13.17 × Indirect.Costs + 623.56 × Holiday.
+   **Fitting Linear Model**
+   lm0 <- lm(Y ~ X1 + X2 + X3, data = Grocery)
+#Residuals
+  residuals(vector)[range]
+#Fitted
+  fitted(vector)[range]
+
+##Fourth Slides##
+
+#Barplot
+  table(diamonds$cut)
+  diamonds$cut <- factor(diamonds$cut, level = c("Fair",
+  "Good", "Very Good", "Premium",
+  "Ideal"))
+  barplot(height = table(diamonds$cut),
+  names.arg = names(table(diamonds$cut)))
+#ScatterPlot  
+  plot(log(small_diam$carat), log(small_diam$price),
+  col = small_diam$cut)
+  legend("bottomright", legend = levels(small_diam$cut),
+  fill = 1:length(levels(small_diam$cut)), cex = .5)  
+  abline(8, 0, col = "orange", lty = 2)
+  lm1 <- lm(log(small_diam$price) ~ log(small_diam$carat))
+  abline(lm1)
+  points(-0.4, 6.8, pch = "*", col = "purple")
+  text(-0.4, 6.8 - .2, "New Diamond", cex = .5)
+#Graphical Parameters
+  pch - character of the points in the plot
+  main - title of the plot
+  xlab, ylab - Axes labels
+  lty - Line Type
+  lwd - Line Width
+  cex - Character Expand
+  xlim, ylim - The limits of the axes
+  mfrow - Plot figures in an array
+  col - Color
+
+  
+
