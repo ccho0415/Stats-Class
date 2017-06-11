@@ -1,0 +1,149 @@
+---
+title: "Homework_3"
+author: "Christine Chong cc4190"
+date: "June 9, 2017"
+output: 
+  pdf_document: 
+    latex_engine: lualatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+i. Use the readLines() command we studied in class to load the NetsSchedule.html file
+into a character vector in R. Call the vector nets1617.
+```{r}
+nets1617 <- readLines("NetsSchedule.html" )
+```
+a. How many lines are in the NetsSchedule.html file?
+  Here we can use the length function to find the number of lines
+```{r}
+length(nets1617)
+```
+b. What is the total number of characters in the file?
+  Here we can add all the character counts from each line of the file using sum and nchar.
+```{r}
+sum(nchar(nets1617))
+```
+c. What is the maximum number of characters in a single line of the file?
+    Here we can use the max function on nchar(nets1617) to figure out the maximum number of characters in a single line of the file.
+    (Especially because nchar(nets1617) prints out the number of character counts there are for each line of the file).
+```{r}
+max(nchar(nets1617))
+```
+ii. Open NetsSchedule.html as a webpage. This should happen if you simply click on
+the file. You should see a table listing all the games scheduled for the 2016-2017 NBA
+season. There are a total of 82 regular season games scheduled. Who and when are
+they playing first? Who and when are they playing last?
+  They are playing Boston on October 26 first.
+  They are playing Chicago on April 12 last.
+iii. Now, open NetsSchedule.html using a text editor. To do this you may need to rightclick
+on the file and tell your computer to use a text editor to open the file. What
+line in the file holds information about the first game of the regular season (date, time,
+opponent)? What line provides the date, time, and opponent for the final game? It
+may be helpful to use CTRL-F or COMMAND-F here and also work between the file in R
+and in the text editor.
+Using NetsSchedule.html we'd like to extract the following variables: the date, the game
+time (ET), the opponent, and whether the game is home or away. Looking at the file in
+the text editor, locate each of these variables. For the next part of the homework we use
+regular expressions to extract this information.
+1
+
+**Line 315 starts the code for the Schedule.**
+
+
+iv. Write a regular expression that will capture the date of the game. Then using the
+grep() function find the lines in the file that correspond to the games. Make sure
+that grep() finds 82 lines, and the first and last locations grep() finds match the
+first and last games you found in (ii).
+  Here we can use grep along with regular expressions to find the date
+    Capital Letter, 2 Lower Case Letters Space Number and Maybe a Number
+```{r}
+findByDate<- "[A-Z][a-z]{2}, [A-Z][a-z]{2} [0-9][0-9]?"
+grepDate <- grep(findByDate, nets1617)
+length(grepDate)
+```
+v. Using the expression you wrote in (v) along with the functions regexp() and regmatches(),
+extract the dates from the text file. Store this information in a vector called date to
+save to use below. HINT: We did something like this in class.
+  Here we can use grepl, gregexpr and regmatches to get the specific strings that match the pattern we stated earlier.
+  We must unlist the matches here so that the later data frame prints out as intended
+```{r}
+match_bool<- grepl(nets1617, pattern = findByDate)
+match_dates <- gregexpr(pattern = findByDate, text = nets1617[match_bool])
+matches <- regmatches(nets1617[match_bool], match_dates)
+matches <- unlist(matches)
+head(matches, 4)
+```
+
+vi. Use the same strategy as in (v) and (vi) to create a time vector that stores the time
+of the game.
+  Here we can use the same strategy as earlier except the regular expression will be different.
+    Number, : ,2 Numbers, Space, 2 Capital Letter,
+```{r}
+findTime <- "[0-9]\\:[0-9]{2}\\s+[A-Z]{2}"
+grepTime <- grep(findTime, nets1617)
+length(grepTime)
+time_bool<-grepl(nets1617, pattern =findTime)
+match_time <-gregexpr(pattern = findTime, text=nets1617[time_bool])
+times <- regmatches(nets1617[time_bool], match_time)
+times <- unlist(times)
+head(times, 4)
+```
+vii. We would now like to gather information about whether the game is home or away.
+This information is indicated in the schedule by either an '@' or a 'vs' in front of the
+opponent. If the Nets are playing '@' their opponent's court, the game is away. If the
+Nets are playing 'vs' the opponent, the game is at home.
+Capture this information using a regular expression. You may want to use the HTML
+code around these values to guide your search. Then extract this information and use
+it to create a vector called home which takes the value 1 if the game is played at home
+or 0 if it is away.
+HINT: In my solution, I use the fact that in each line, the string <li class= "game-status
+"> appears before this information. So my regular expression searches for that string
+followed by '@' or that string followed by 'vs'. After I've extracted these strings, I use
+substr() to finally extract just the '@' or the 'vs'.
+  Here we have to use a slightly different strategy. (Writing the html code as the regular expression instead of the expression itself). And then we used an ifelse statement to create a vector of 0s and 1s.
+    <li class = "game-status">, Maybe @, Maybe lower case letter, Maybe lower case letter
+```{r}
+findStatus <- "<li class=\"game-status\">[[:punct:]]?[a-z]?[a-z]?"
+
+grepStatus <- grep(findStatus, nets1617)
+length(grepStatus)
+status_bool <- grepl(nets1617, pattern=findStatus)
+match_status <-gregexpr(pattern = findStatus, text=nets1617[status_bool])
+status <- regmatches(nets1617[status_bool], match_status)
+home <- ifelse(status ==  "<li class=\"game-status\">@", 0, 1)
+home
+```
+
+viii. Finally we would like to find the opponent, again capture this information using a
+regular expression. Extract these values and save them to a vector called opponent.
+Again, to write your regular expression you may want to use the HTML code around
+the names to guide your search.
+  Here we have to use the url to find the components that contained the team names.
+    www.espn.com/nba/team/_/name/, Lowercase Letter at least once, / , Lower case letter at least once, Maybe -, Maybe lower case letter at least once, Maybe -, Lower case letter at least once.
+  After we vectorized the url we can use string split by / and get the last index of this vector to get the team name
+```{R}
+findTeam <- "www.espn.com/nba/team/_/name/[a-z]{1,}/[a-z]{1,}-?[a-z]{1,}-?[a-z]{1,}"
+grepTeam <- grep(findTeam, nets1617)
+length(grepTeam)
+team_bool <-grepl(nets1617, pattern = findTeam)
+match_team <- gregexpr(pattern =  findTeam, text=nets1617[team_bool])
+team <-regmatches(nets1617[team_bool], match_team)
+opponent <- c()
+for(i in 1:length(team)){
+ url_vec <- strsplit(team[[i]][1], split = "/")
+ opponent[i] <- unlist(url_vec)[7]
+}
+opponent
+
+```
+ix. Construct a data frame of the four variables in the following order: date, time,
+opponent, home. Print the frame from rows 1 to 10 Does the data match the first 10
+games as seen from the web browser?
+  Here we can use the variables earlier to create the data frame combo. It does match the first 10 games as seen from the web browser.
+```{r}
+
+combo <- data.frame(matches,times,home,opponent, check.names = TRUE)
+head(combo, 10)
+```

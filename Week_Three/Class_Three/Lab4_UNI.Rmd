@@ -2,7 +2,9 @@
 title: "Lab 4"  
 author: "Christine Chong cc4190"
 date: "June 7th 2017"
-output: pdf_document
+output: 
+  pdf_document: 
+    latex_engine: lualatex
 ---
 
 # Instructions 
@@ -36,35 +38,33 @@ convex_func(2)
 2) Plot the function $f(x)$ over the interval $(0,6]$. 
 ```{r}
 allx <- c(1,2,3,4,5,6)
-ally <- c(convex_func(1),convex_func(2),convex_func(3),convex_func(4),convex_func(5),convex_func(6))
-plot(allx,ally)
+allx <- seq(.1,6,.01)
+
+plot(allx,convex_func(allx), type="l")
 ```
 3)  By inspection, were do you think global minimum is located at?  
   f(4)
   
 4) Define a **R** function which computes the difference quotient of $f(x)$, i.e., for $h>0$, 
 $$\frac{f(x+h)-f(x)}{h}.$$ This function should have two inputs; $h$ and $x$.  Name the difference quotient function **diff.quot**.  Note that for small $h$,  this function is the approximate derivative of $f(x)$.    
+
+Use convex function to calculate derivative
 ```{r}
-diff.quot <- function(x, h){
+diff.quot <- function(x, h=.0001){
   if(x>0 && h>0){
-    topx<- (log(x)*-1)
-    bottomx <- 1+x
-    totalx <- topx/bottomx
-    toph <- (log(h)*-1)
-    bottomh <-1+h
-    totalh <- toph/bottomh
-    topall <- (topx+toph) - topx
-    totalall <- topall/h
-    return(totalall)
+    topdiff <- (convex_func(x+h) - convex_func(x))
+    totaldiff <- topdiff/h
+    return(totaldiff)
   }else{
     return(FALSE)
   }  
 }
+diff.quot(c(1,2,3))
 ```
 5) Plot both the difference quotient function **diff.quot** and $f(x)$ over the interval $(0,6]$.  Fix $h=.0001$ to construct this plot.  Comment on any interesting features.
 ```{r}
-diff.quot.y <- c(diff.quot(1,.0001),diff.quot(2,.0001),diff.quot(3,.0001),diff.quot(4,.0001), diff.quot(5,.0001), diff.quot(6,.0001))
-plot(allx,diff.quot.y)
+
+plot(allx,diff.quot(allx), type ="l")
 ```
 6) Write a **R** function named **basic.grad.descent** that runs the basic gradient descent algorithm on the function $f(x)$.
 The function should have inputs:   
@@ -81,7 +81,31 @@ The function should have inputs:
 \item The number of iterations the algorithm took to reach the minimum.
 \item A logical indicator displaying whether or not the algorithm converged.  
 \end{enumerate}
+```{r}
+basic.grad.descent <- function(x, h=.0001){
+max.iter <- 10000
+stop.deriv <- 1e-10
+derivative.step <- h
+step.scale <- .5
+iter <- 0
+deriv <- Inf
+beta <- 0.15
+sse <- function(b){ sum((convex_func(b) - diff.quot(b)*b^b))}
+for(i in 1:max.iter){
+  iter <- iter +1
+}
+  deriv <-(sse(beta+derivative.step) -sse(beta))/derivative.step
+  beta <- beta -step.scale*deriv
+  if(abs(deriv)<stop.deriv){break()}
+fit <-list(beta=beta, iteration = iter, converged = (iter<max.iter)) 
+return(x)
+return(fit)
 
+}
+
+```
 7)  Check the optimal value using the base **R** function **nlm()**.  
-
+```{r}
+nlm(basic.grad.descent, .001)
+```
 
