@@ -1,0 +1,110 @@
+---
+title: "KNN Regression (2 Features)"
+author: 'Gabriel Young'
+date: "06/13/2017"
+output: pdf_document
+--- 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Problem 3
+
+Simulate data 
+```{r}
+# Tuning parameter k
+k=10
+# Plot refinement
+refine <- 20
+# Sample size
+n=50
+
+# Simulate data set Y = f(x) +error
+set.seed(2)
+x1=sample(seq(-pi,pi,length=200),n)
+set.seed(5)
+x2=sample(seq(-pi,pi,length=200),n)
+y <- cos(x2)/(1+(x1)^2)+rnorm(n,1/10)
+data.set <- cbind(x1,x2,y)
+
+# head
+head(data.set)
+```
+
+
+Plot true curve $f(x)$. 
+```{r}
+x1=seq(-pi,pi,length=refine)
+x2=seq(-pi,pi,length=refine)
+f=outer(x1,x2,function(x1,x2) cos(x2)/(1+x1^2))
+persp(x1,x2,f,theta=-30,phi=20,col="pink",border="black",box=T,zlim = range(data.set[,"y"]))
+```
+
+# Part B
+
+```{r}
+# Write kNN reg funciton
+kNN.Regression.2Features <- function(x.1,x.2,data=data.set,k=5) {
+  
+    # Define distances
+  D <- sqrt((x.1-data[,"x1"])^2+(x.2-data[,"x2"])^2)
+
+  # Find k-closest time points to x
+  K.closest.neighbors <- order(D)[1:k]
+  
+  # Return the mean of the k-corresponding response values (approval ratings)
+  y.hat <- mean(data[K.closest.neighbors,"y"])
+  return(y.hat)
+}
+```
+
+Plot the function. 
+
+```{r}
+#######################################################
+# Plot the surface f.hat  
+#######################################################
+# Compute f.hat grid to plot the function.  This is like the outer() function.  
+x1 <- seq(-pi,pi,length=refine)
+x2 <- seq(-pi,pi,length=refine)
+
+f.hat.plot <- matrix(0,nrow=refine,ncol=refine) 
+for (i in 1:refine) {
+  for (j in 1:refine) {
+    
+    f.hat.plot[i,j] <-  kNN.Regression.2Features(x.1=x1[i],x.2=x2[j],k=k)
+    
+    
+  }
+}
+
+# Compute y.hat values.  
+y.hat.plot <- NULL
+for (i in 1:length(data.set[,"x1"])) {
+  
+  
+  y.hat.plot[i] <-  kNN.Regression.2Features(x.1=data.set[i,"x1"],x.2=data.set[i,"x2"],k=k)
+  
+}
+
+# Check if residuals are above or below the estimated surface.  (Just for esthetics in the plot)
+above <- ifelse(y.hat.plot<=data.set[,"y"],T,F)
+below <- ifelse(y.hat.plot<=data.set[,"y"],F,T)
+
+# Plot f.hat with the actual data.  
+kNN.reg.plot <- persp(x1,x2,f.hat.plot,theta=-30,phi=20,xlim = range(data.set[,"x1"]),ylim = range(data.set[,"x2"]),zlim = range(data.set[,"y"]),col="pink",border="black",box=T)
+f_hat_above <- trans3d(data.set[above,"x1"],data.set[above,"x2"],data.set[above,"y"],pmat=kNN.reg.plot)
+points(f_hat_above,col="blue")
+f_hat_below <- trans3d(data.set[below,"x1"],data.set[below,"x2"],data.set[below,"y"],pmat=kNN.reg.plot)
+points(f_hat_below,col="black")
+
+# Vertical lines from the response values to the estimated function.  
+for (k in 1:length(data.set[,"x1"])) {
+  vert <- trans3d(c(data.set[k,"x1"],data.set[k,"x1"]),c(data.set[k,"x2"],data.set[k,"x2"]),c(data.set[k,"y"],y.hat.plot[k]),pmat=kNN.reg.plot)
+  lines(vert,col="black",lty=3)
+}
+```
+
+

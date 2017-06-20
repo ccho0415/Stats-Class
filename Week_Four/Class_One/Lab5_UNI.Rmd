@@ -1,8 +1,10 @@
 ---
 title: "Lab 5"
-author: "Enter Your Name and UNI Here"
+author: "Christine Chong cc4190"
 date: "June 12, 2016"
-output: pdf_document
+output: 
+  pdf_document: 
+    latex_engine: lualatex
 ---
 
 ```{r, echo = FALSE}
@@ -40,6 +42,7 @@ boxplot(Weekly$Lag1~Weekly$Direction,main="Returns",ylab="One Week Ago",xlab="Di
 
 ## ACF Plot (Try Lag 2 also)
 acf(data.frame(Weekly$Today,Weekly$Lag1))
+acf(data.frame(Weekly$Today,Weekly$Lag2))
 ```
 
 
@@ -57,28 +60,51 @@ Recall the KNN procedure.  We classify a new point with the following steps:
 2. We'd like to perform KNN on the *Weekly* data, as we did with the *Smarket* data in class.  In class we wrote the following function which takes as input a new point $(Lag1_{new}, Lag2_{new})$ and provides the KNN decision using as defaults $K=5$, Lag1 data given in *Smarket\$Lag1*, and Lag2 data given in *Smarket\$Lag2*.  Update the function to calculate the KNN decision for weekly market direction using the *Weekly* dataset with *Lag1* - *Lag5* as predictors.  Your function should have only three input values: (1) a new point which should be a vector of length $5$, (2) a value for K, and (3) the Lag data which should be a data frame with five columns (and n rows). 
 
 ```{r}
- KNN.decision <- function(Lag1.new, Lag2.new, Lag3.new, Lag4.new, Lag5.new, K = 5, Lag1 = Weekly$Lag1, Lag2 = Weekly$Lag2, Lag3 = Weekly$Lag3, Lag4 = Weekly$Lag4, Lag5 = Weekly$Lag5) {
+ KNN.decision <- function(NewPoint, K = 5, Lag1 = Weekly$Lag1, Lag2 = Weekly$Lag2, Lag3 = Weekly$Lag3, Lag4 = Weekly$Lag4, Lag5 = Weekly$Lag5) {
    
-   n <- length(Lag1)
+   n <- length(NewPoint)
    
-   stopifnot(length(Lag2) == n, length(Lag1.new) == 1, length(Lag2.new) == 1, K <= n)
+   stopifnot(length(NewPoint) == 5)
    
-   dists       <- sqrt((Lag1-Lag1.new)^2 + (Lag2-Lag2.new)^2 + (Lag3-Lag3.new)^2 + (Lag4-Lag4.new)^2 + (Lag5-Lag5.new)^2)
-   neighbors  <- order(dists)[1:K]
-   neighb.dir <- Smarket$Direction[neighbors]
-   choice      <- names(which.max(table(neighb.dir)))
+   dists       <- sqrt((Lag1-NewPoint[1])^2 + (Lag2-NewPoint[2])^2 + (Lag3-NewPoint[3])^2 + (Lag4-NewPoint[4])^2 + (Lag5-NewPoint[5])^2)
+   market  <- order(dists)[1:K]
+   market.dir <- Weekly$Direction[market]
+   choice      <- names(which.max(table(market.dir)))
    return(choice)
-}
+ }
+KNN.decision(c(1,2,3,4,5))
 ```
 
 3. Now train your model using data from 1990 - 2008 and use the data from 2009-2010 as test data.  To do this, divide the data into two data frames, *test* and *train*.  Then write a loop that iterates over the test points in the test dataset calculating a prediction for each based on the training data with $K=5$.  Save these predictions in a vector.  Finally, calculate your test error, which you should store as a variable named *test.error*.  The test error calculates the proportion of your predictions which are incorrect (don't match the actual directions).
 
 ```{r}
-
+test <- Weekly[Weekly$Year >= 2009, ]
+train <- Weekly[Weekly$Year < 2009, ]
+max <- nrow(test)
+predictions <- rep(NA, max)
+for(i in 1:max){
+  insert <- c(test$Lag1[i], test$Lag2[i], test$Lag3[i], test$Lag4[i], test$Lag5[i])
+  predictions[i]<-KNN.decision(insert, K=5, Lag1 = train$Lag1, Lag2 = train$Lag2, Lag3 = train$Lag3, Lag4 = train$Lag4, Lag5 = train$Lag5)
+}
+test.err <- sum(predictions != test$Direction)/max
+test.err
 ```
 
 
 4. Do the same thing as in question 3, but instead use $K=3$.  Which has a lower test error?
+```{r}
+test <- Weekly[Weekly$Year >= 2009, ]
+train <- Weekly[Weekly$Year < 2009, ]
+max <- nrow(test)
+predictions <- rep(NA, max)
+for(i in 1:max){
+  insert <- c(test$Lag1[i], test$Lag2[i], test$Lag3[i], test$Lag4[i], test$Lag5[i])
+  predictions[i]<-KNN.decision(insert, K=3, Lag1 = train$Lag1, Lag2 = train$Lag2, Lag3 = train$Lag3, Lag4 = train$Lag4, Lag5 = train$Lag5)
+}
+test.err <- sum(predictions != test$Direction)/max
+test.err
+```
+  K=3 Has a Lower Error. (The Test.err is closer to 0)
 
 # Part 3: Cross-validation
 
@@ -90,7 +116,72 @@ In this section, we instead consider a class of methods that estimate the test e
 We'll run a $9$-fold cross-validation in the following.  Note that we have 1089 rows in the dataset, so each fold will have exactly 121 members.
 
 5. Create a vector *fold* which has $n$ elements, where $n$ is the number of rows in *Weekly*.  We'd like for the *fold* vector to take values in 1-9 which assign each corresponding row of the *Weekly* dataset to a fold.  Do this in two steps: (1) create a vector using *rep()* with the values 1-9 each repeated 121 times (note $1089 = 121 \cdot 9$), and (2) use *sample()* to randomly reorder the vector you created in (1).
+```{r}
 
+fold <- rep(1:9, 121)
+reorder<- sample(fold)
+
+```
 6. Iterate over the $9$ folds, treating a different fold as the test set and all others the training set in each iteration.    Using a KNN classifier with $K=5$ calculate the test error for each fold.  Then calculate the cross-validation approximation to the test error which is the average of ERR1, ERR2, ..., ERR9.
-
+```{r}
+n <- nrow(Weekly)
+test.err<- NULL
+predictions <- rep(NA, n)
+for(k in 1:9){
+  test <- Weekly[reorder ==k, ]
+  train <- Weekly[reorder !=k, ]
+  for (i in 1:n){
+  insert <- c(test$Lag1[i], test$Lag2[i], test$Lag3[i], test$Lag4[i], test$Lag5[i])
+  predictions[i]<-KNN.decision(insert, K=5, Lag1 = train$Lag1, Lag2 = train$Lag2, Lag3 = train$Lag3, Lag4 = train$Lag4, Lag5 = train$Lag5)    
+  }
+test.err[k] <- sum(predictions != test$Direction)/max
+}
+test.err
+```
 7. Repeat step (6) for $K = 1$, $K=3$, and $K=7$.  For which set is the cross-validation approximation to the test error the lowest?
+```{r}
+n <- nrow(Weekly)
+test.err.1<- NULL
+predictions <- rep(NA, n)
+for(k in 1:9){
+  test <- Weekly[reorder ==k, ]
+  train <- Weekly[reorder !=k, ]
+  for (i in 1:n){
+  insert <- c(test$Lag1[i], test$Lag2[i], test$Lag3[i], test$Lag4[i], test$Lag5[i])
+  predictions[i]<-KNN.decision(insert, K=1, Lag1 = train$Lag1, Lag2 = train$Lag2, Lag3 = train$Lag3, Lag4 = train$Lag4, Lag5 = train$Lag5)    
+  }
+test.err.1[k] <- sum(predictions != test$Direction)/max
+}
+test.err.1
+```
+```{r}
+n <- nrow(Weekly)
+test.err.3<- NULL
+predictions <- rep(NA, n)
+for(k in 1:9){
+  test <- Weekly[reorder ==k, ]
+  train <- Weekly[reorder !=k, ]
+  for (i in 1:n){
+  insert <- c(test$Lag1[i], test$Lag2[i], test$Lag3[i], test$Lag4[i], test$Lag5[i])
+  predictions[i]<-KNN.decision(insert, K=3, Lag1 = train$Lag1, Lag2 = train$Lag2, Lag3 = train$Lag3, Lag4 = train$Lag4, Lag5 = train$Lag5)    
+  }
+test.err.3[k] <- sum(predictions != test$Direction)/max
+}
+test.err.3
+```
+```{r}
+n <- nrow(Weekly)
+test.err.7<- NULL
+predictions <- rep(NA, n)
+for(k in 1:9){
+  test <- Weekly[reorder ==k, ]
+  train <- Weekly[reorder !=k, ]
+  for (i in 1:n){
+  insert <- c(test$Lag1[i], test$Lag2[i], test$Lag3[i], test$Lag4[i], test$Lag5[i])
+  predictions[i]<-KNN.decision(insert, K=7, Lag1 = train$Lag1, Lag2 = train$Lag2, Lag3 = train$Lag3, Lag4 = train$Lag4, Lag5 = train$Lag5)    
+  }
+test.err.7[k] <- sum(predictions != test$Direction)/max
+}
+test.err.7
+```
+It seems like K=5 creates the lowest Test Errors

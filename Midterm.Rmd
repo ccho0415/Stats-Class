@@ -4,7 +4,8 @@ author: "Christine Chong cc4190"
 date: "June 8, 2017"
 output:
   html_document: default
-  pdf_document: default
+  pdf_document:
+    latex_engine: lualatex
 ---
 
 The STAT GU4206/5206 midterm is open notes, open book(s), and online resources are allowed.  Students are **not** allowed to communicate with any other people during the midterm with the exception of the GU4206/5206 instructor.  When you are finished with the midterm, please upload both the .pdf and .Rmd files on Canvas.   
@@ -70,6 +71,7 @@ Now suppose as researchers, we want to infer upon the true slope relating a six 
  LL <- 2*slope.hat-quantile(slopes.boot,.975)
  UL <- 2*slope.hat-quantile(slopes.boot,.025)
  c(LL,UL) 
+
 ```
 
 ## 2.iii)
@@ -78,7 +80,8 @@ At 5% significance, is a six cylinder car's acceleration statistically related t
 
 **Solution:** 
 
-I do believe that the car's accleration is related to its weight, but the difference seems to be slight as the difference between the Upper Level and Lower Level are not drastically different
+Due to the value at 5% significance being not 0, it is safe to say that a six cylinder's car accleration is stastiscally related.
+If the number was closer to 1, it would have more of a significant relation.
 
 ## 2.iv)  
 
@@ -122,6 +125,7 @@ for(i in 1:max){
   titlecompany
   Auto.new$company[i] <- titlecompany
 }
+head(Auto.new, 3)
 ```
 
 
@@ -157,11 +161,7 @@ Using the appropriate apply function, compute the average value of quantitative 
 
 ```{r}
 variables <- c("mpg","displacement","horsepower","weight","acceleration")
-mean(Auto.new$mpg)
-mean(Auto.new$displacement)
-mean(Auto.new$horsepower)
-mean(Auto.new$weight)
-mean(Auto.new$acceleration)
+apply(Auto.new[variables],2,mean) 
   
 
 ```
@@ -176,6 +176,16 @@ For extra credit, plot regression lines for each subgroup, i.e., plot 3 least sq
 ```{r}
 plot(Auto.new$weight, Auto.new$acceleration, col= factor(Auto.new$cylinders))
 legend("bottomright", legend = levels(factor(Auto.new$cylinders)), fill = unique(factor(Auto.new$cylinders)))
+cylinders <- levels(factor(Auto.new$cylinders))
+col_counter <- 1
+for (i in cylinders) {
+  this_cylinder    <- Auto.new$cylinders == i
+  this_data   <- Auto.new[this_cylinder, ]
+  this_lm     <- lm((this_data$acceleration) 
+                    ~(this_data$weight))
+  abline(this_lm, col = col_counter)
+  col_counter <- col_counter + 1
+}
 ```
 
 
